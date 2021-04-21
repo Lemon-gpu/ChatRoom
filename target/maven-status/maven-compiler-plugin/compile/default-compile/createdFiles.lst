@@ -1,0 +1,7 @@
+Dictionary.class
+com\example\ChatRoom\HelloApplication.class
+com\example\ChatRoom\HelloServlet.class
+WebSocket.class
+Message.class
+com\example\ChatRoom\HelloResource.class
+WebSocket$1.class

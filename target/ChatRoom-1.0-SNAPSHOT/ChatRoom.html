@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <!-- <button onclick="init()"></button> -->
+    <div class="OverAllFramework">
+        <div id="SideBar">
+            <div id="SelfIcon">
+                <img src="HeadIcon/1.jpg" alt="">
+            </div>
+            <ul id="FunctionIcon">
+                <li>
+                    <a href="">
+                        <img src="icon/聊天.png" alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <img src="icon/关于.png" style="height: 28px; width: 28px;">
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div id="UserList">
+            <ul id="User">
+                <li>
+                    <div id="GroupChatRoom">
+                        <div id="GroupChatRoomIcon"><img src="HeadIcon/3.jpg" alt=""></div>
+                        <div id="GroupChatRoomName">群聊</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div id="ChatFrame">
+            <!-- <img src="Logo.png" alt="" id="Background"> -->
+            <div>
+                <div id="Header">
+                    <div id="Name">群聊</div>
+                </div>
+                <div id="OnChat">
+
+                </div>
+                <div id="TextBox">
+                    <textarea name="" id="Text"></textarea>
+                    <div style="text-align: right;">
+                        <input type="button" value="发送" id="Send" onclick="send()">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+<script src="script.js"></script>
