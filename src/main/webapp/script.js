@@ -1,3 +1,4 @@
+//无论如何，任何动态的改动必须等到dom树准备好后才能绑定事件
 let TypeDictionary = {
     ADDUSER: 0, DELECTUSER: 1, NICKNAME: 2, GROUPCHAT: 3, PRIVATECHAT: 4, ID: 5
 };
@@ -12,6 +13,13 @@ class selfInfo {
 }
 
 let ChatLog = [];
+/*
+todo：接下来的难点之一，信息的持久化储存，
+todo：当前想法就是关闭的时候把整个Chatlog扔回去，当然会有性能上面的问题，
+todo：也会有丢失数据的问题，因此改进可能就应在发送信息的时候执行一个保存了，
+todo：我们说数据库会打算以id为primary key，应该一个表就可以了，可能最多加上头像？没必要
+ */
+
 
 function send() {
     let message = selfInfo.Nickname + "：" + document.getElementById("Text").value;
@@ -21,7 +29,7 @@ function send() {
     selfInfo.socket.send(pack);
     document.getElementById("Text").value = "";
 }
-
+//这里说一下，用户信息发过来的时候是使用空格分开的，前面是昵称，然后一个空格，接着是id号码
 function addUserList(User) {
     let name = User.split(" ")[0];
     let id = User.split(' ')[1];

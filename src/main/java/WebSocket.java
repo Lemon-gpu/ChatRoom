@@ -22,7 +22,7 @@ public class WebSocket {
     private String username = null;
     private String ID = null;
 
-    //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。若要实现服务端与单一客户端通信的话，可以使用Map来存放，其中Key可以为用户标识
+    //用来存放每个客户端对应的MyWebSocket对象
     private static HashMap<String, WebSocket> webSocketSet = new HashMap<>();
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
@@ -55,14 +55,14 @@ public class WebSocket {
 
     /**
      * 收到客户端消息后调用的方法
-     *
+     * 按照消息类型反应不同的动作
      * @param text    客户端发送过来的Json消息
      * @param session 可选的参数
      */
     @OnMessage
     public void onMessage(String text, Session session) {
         System.out.println("来自客户端的消息:" + (session.getId() + " " + getNickname() + "： " + text));
-        Message message = JSON.parseObject(text, Message.class);
+        Message message = JSON.parseObject(text, Message.class);//FastJSON 负责把json信息转化为对象
         switch (this.getType(message.getType())) {
             case NICKNAME:
                 this.setNickname(message.getMessageContent());
@@ -93,7 +93,11 @@ public class WebSocket {
                 break;
         }
     }
-
+    /*
+       todo：我想这里也是一个难点，图片的传输，表情就算了吧，毕竟emoji又不是不能用
+       todo：servlet完成的一个图片传输，应在这个数据的交互这里了，给定一个链接，然后再传过去
+       todo：或者使用websocket来执行，传输位文件
+     */
     /**
      * 发生错误时调用
      *
@@ -105,13 +109,13 @@ public class WebSocket {
         System.out.println("发生错误");
         error.printStackTrace();
     }
-
+//设置用户名
     public void setNickname(String name) {
         if (username == null) {
             username = name;
         }
     }
-
+//更新当前客户端的用户列表
     public void updateMyList() {
         for (Map.Entry<String, WebSocket> entry : webSocketSet.entrySet()) {
             WebSocket item = entry.getValue();
@@ -124,17 +128,11 @@ public class WebSocket {
             }
         }
     }
-
+//获得当前用户名
     public String getNickname() {
         return username == null || username.equals("") ? "错误，用户名尚未设置" : username;
     }
-
-    /**
-     * 这个方法与上面几个方法不一样。没有用注解，是根据自己需要添加的方法。
-     *
-     * @param message
-     * @throws IOException
-     */
+    //做好封装之后的发送信息
     public void sendMessage(Message message) throws IOException {
         this.session.getBasicRemote().sendText(JSONObject.toJSONString(message));
         //this.session.getAsyncRemote().sendText(message);
@@ -151,7 +149,7 @@ public class WebSocket {
     public static synchronized void subOnlineCount() {
         WebSocket.onlineCount--;
     }
-
+//把除了自身之外的全部客户端都发消息
     public void sendGroupMessage(Message message) {
         for (Map.Entry<String, WebSocket> entry : webSocketSet.entrySet()) {
             WebSocket item = entry.getValue();
@@ -165,7 +163,7 @@ public class WebSocket {
             }
         }
     }
-
+//私聊消息
     public void sendIndividualMessage(Message message) {
         String senderID = message.getSenderID();
         String receiverID = message.getReceiverID();
@@ -178,28 +176,7 @@ public class WebSocket {
             e.printStackTrace();
         }
     }
-
-    public synchronized JSONObject createCurrentUserInfo() {
-        JSONObject userName = new JSONObject();
-        for (Map.Entry<String, WebSocket> entry : webSocketSet.entrySet()) {
-            WebSocket item = entry.getValue();
-            if (Objects.equals(item.ID, this.ID)) {
-                continue;
-            }
-            JSONObject userInfo = new JSONObject();
-            userInfo.put("Username", item.getNickname());
-            userInfo.put("UserID", item.ID);
-            userName.put("UserInfo", userInfo);
-        }
-        return userName;
-    }
-
-    public JSONObject MessageWrapper(String text) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("Message", text);
-        return jsonObject;
-    }
-
+//获得索引对应的类型信息
     public Dictionary getType(int index) {
         return Dictionary.class.getEnumConstants()[index];
     }
