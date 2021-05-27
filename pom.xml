@@ -55,6 +55,11 @@
             <artifactId>mssql-jdbc</artifactId>
             <version>9.2.1.jre11</version>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.24</version>
+        </dependency>
     </dependencies>
 
     <build>
